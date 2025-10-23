@@ -17,10 +17,10 @@ class TeacherController {
     }
     
     /**
-     * Mostra el llistat de professors
+     * Mostra el llistat de professors amb el nombre de cursos assignats (N:M)
      */
     public function index() {
-        $teachers = $this->teacherModel->getAll();
+        $teachers = $this->teacherModel->getAllWithCourseCount();
         require_once __DIR__ . '/../views/teachers/index.php';
     }
     

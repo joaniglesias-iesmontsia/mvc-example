@@ -22,6 +22,7 @@ require_once __DIR__ . '/../layouts/header.php';
                     <th>Nom del Curs</th>
                     <th>Descripció</th>
                     <th>👤 Estudiants</th>
+                    <th>👨‍🏫 Professors</th>
                     <th>Data de Creació</th>
                     <th>Accions</th>
                 </tr>
@@ -37,6 +38,17 @@ require_once __DIR__ . '/../layouts/header.php';
                             <span class="badge" style="background-color: var(--success-color);">
                                 <?= $course['student_count'] ?> estudiants
                             </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="badge badge-info">
+                                <?= $course['teacher_count'] ?? 0 ?> professors
+                            </span>
+                            <br>
+                            <a href="/teaching-teams/show?course_id=<?= $course['id'] ?>" 
+                               class="btn btn-small btn-primary" 
+                               style="margin-top: 5px; font-size: 0.8rem;">
+                                👁️ Veure equip
+                            </a>
                         </td>
                         <td><?= date('d/m/Y', strtotime($course['created_at'])) ?></td>
                         <td class="actions">

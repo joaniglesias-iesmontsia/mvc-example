@@ -87,6 +87,29 @@ $router->get('/courses/delete/:id', 'CourseController@delete');
 
 
 // ============================================
+// RUTES D'EQUIPS DOCENTS (Relació N:M entre Courses i Teachers)
+// ============================================
+
+// Llistat de tots els equips docents
+$router->get('/teaching-teams', 'TeachingTeamController@index');
+
+// Veure l'equip docent d'un curs concret
+$router->get('/teaching-teams/show', 'TeachingTeamController@show');
+
+// Formulari per assignar un professor a un curs
+$router->get('/teaching-teams/assign', 'TeachingTeamController@assign');
+
+// Processa l'assignació d'un professor a un curs (POST)
+$router->post('/teaching-teams/store', 'TeachingTeamController@store');
+
+// Desassigna un professor d'un curs
+$router->get('/teaching-teams/remove', 'TeachingTeamController@remove');
+
+// Veure cursos d'un professor concret
+$router->get('/teaching-teams/by-teacher', 'TeachingTeamController@byTeacher');
+
+
+// ============================================
 // NOTES PER ALS ESTUDIANTS
 // ============================================
 

@@ -23,6 +23,7 @@ require_once __DIR__ . '/../layouts/header.php';
                     <th>Telèfon</th>
                     <th>Departament</th>
                     <th>Especialitat</th>
+                    <th>📚 Cursos</th>
                     <th>Data de Creació</th>
                     <th>Accions</th>
                 </tr>
@@ -36,6 +37,19 @@ require_once __DIR__ . '/../layouts/header.php';
                         <td><?= htmlspecialchars($teacher['phone']) ?></td>
                         <td><span class="badge"><?= htmlspecialchars($teacher['department']) ?></span></td>
                         <td><?= htmlspecialchars($teacher['specialty']) ?></td>
+                        <td style="text-align: center;">
+                            <span class="badge badge-info">
+                                <?= $teacher['course_count'] ?? 0 ?> cursos
+                            </span>
+                            <br>
+                            <?php if (($teacher['course_count'] ?? 0) > 0): ?>
+                                <a href="/teaching-teams/by-teacher?teacher_id=<?= $teacher['id'] ?>" 
+                                   class="btn btn-small btn-primary" 
+                                   style="margin-top: 5px; font-size: 0.8rem;">
+                                    👁️ Veure cursos
+                                </a>
+                            <?php endif; ?>
+                        </td>
                         <td><?= date('d/m/Y', strtotime($teacher['created_at'])) ?></td>
                         <td class="actions">
                             <a href="/teachers/edit/<?= $teacher['id'] ?>" class="btn btn-small btn-secondary">✏️ Editar</a>

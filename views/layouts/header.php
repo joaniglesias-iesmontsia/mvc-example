@@ -14,6 +14,7 @@
                 <li><a href="/students">📚 Estudiants</a></li>
                 <li><a href="/teachers">👨‍🏫 Professors</a></li>
                 <li><a href="/courses">🎯 Cursos</a></li>
+                <li><a href="/teaching-teams">👥 Equips Docents</a></li>
             </ul>
         </div>
     </nav>

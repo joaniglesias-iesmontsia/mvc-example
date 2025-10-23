@@ -48,11 +48,15 @@ class Course {
     
     /**
      * Obtenir un curs amb el nombre d'estudiants assignats (1:N)
+     * i el nombre de professors assignats (N:M)
      */
     public function getWithStudentCount() {
-        $query = "SELECT c.*, COUNT(s.id) as student_count 
+        $query = "SELECT c.*, 
+                         COUNT(DISTINCT s.id) as student_count,
+                         COUNT(DISTINCT tt.teacher_id) as teacher_count
                   FROM {$this->table} c 
                   LEFT JOIN students s ON s.course_id = c.id 
+                  LEFT JOIN teaching_teams tt ON tt.course_id = c.id
                   GROUP BY c.id 
                   ORDER BY c.name ASC";
         $stmt = $this->db->prepare($query);

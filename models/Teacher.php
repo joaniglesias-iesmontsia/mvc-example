@@ -36,6 +36,20 @@ class Teacher {
     }
     
     /**
+     * Obtenir tots els professors amb el nombre de cursos assignats (N:M)
+     */
+    public function getAllWithCourseCount() {
+        $query = "SELECT t.*, COUNT(DISTINCT tt.course_id) as course_count
+                  FROM {$this->table} t
+                  LEFT JOIN teaching_teams tt ON tt.teacher_id = t.id
+                  GROUP BY t.id
+                  ORDER BY t.name ASC";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+    
+    /**
      * Obtenir un professor per ID
      */
     public function getById($id) {

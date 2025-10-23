@@ -52,25 +52,38 @@ mvc-example/
 │   └── Database.php             # 🧱 Connexió a BD (PDO, Singleton)
 │
 ├── models/
-│   ├── Student.php              # 📊 Model d’Estudiants
-│   └── Teacher.php              # 📊 Model de Professors
+│   ├── Student.php              # 📊 Model d'Estudiants (relació 1:N amb Courses)
+│   ├── Teacher.php              # 📊 Model de Professors (relació N:M amb Courses)
+│   ├── Course.php               # 📊 Model de Cursos (1:N amb Students, N:M amb Teachers)
+│   └── TeachingTeam.php         # 📊 Model d'Equips Docents (taula intermèdia N:M)
 │
 ├── controllers/
-│   ├── StudentController.php    # 🎮 Lògica d’Estudiants
-│   └── TeacherController.php    # 🎮 Lògica de Professors
+│   ├── StudentController.php    # 🎮 Lògica d'Estudiants
+│   ├── TeacherController.php    # 🎮 Lògica de Professors
+│   ├── CourseController.php     # 🎮 Lògica de Cursos
+│   └── TeachingTeamController.php # 🎮 Lògica d'Equips Docents (assignacions N:M)
 │
 ├── views/
 │   ├── layouts/
 │   │   ├── header.php           # 🎨 Capçalera (HTML compartit)
 │   │   └── footer.php           # 🎨 Peu de pàgina (HTML compartit)
 │   ├── students/
-│   │   ├── index.php            # 👁️ Llistat d’estudiants
+│   │   ├── index.php            # 👁️ Llistat d'estudiants
 │   │   ├── create.php           # 👁️ Formulari de creació
-│   │   └── edit.php             # 👁️ Formulari d’edició
-│   └── teachers/
-│       ├── index.php            # 👁️ Llistat de professors
-│       ├── create.php           # 👁️ Formulari de creació
-│       └── edit.php             # 👁️ Formulari d’edició
+│   │   └── edit.php             # 👁️ Formulari d'edició
+│   ├── teachers/
+│   │   ├── index.php            # 👁️ Llistat de professors
+│   │   ├── create.php           # 👁️ Formulari de creació
+│   │   └── edit.php             # 👁️ Formulari d'edició
+│   ├── courses/
+│   │   ├── index.php            # 👁️ Llistat de cursos
+│   │   ├── create.php           # 👁️ Formulari de creació
+│   │   └── edit.php             # 👁️ Formulari d'edició
+│   └── teaching-teams/
+│       ├── index.php            # 👁️ Llistat d'equips docents
+│       ├── show.php             # 👁️ Detall d'un equip docent
+│       ├── assign.php           # 👁️ Formulari d'assignació
+│       └── by-teacher.php       # 👁️ Cursos d'un professor
 │
 ├── public/
 │   └── css/
@@ -354,8 +367,62 @@ Intermedi
 4) Paginació (10 per pàgina) a `/students` i `/teachers`.
 
 Avançat
-5) Relaciona professors i cursos (1—N o N—N) i mostra els cursos d’un professor.
-6) Afegeix login bàsic i protegeix rutes d’edició.
+5) ✅ **Implementat**: Relacions 1:N i N:M amb sistema complet d'equips docents
+6) Afegeix login bàsic i protegeix rutes d'edició.
+
+---
+
+## 🔗 Relacions entre Entitats
+
+Aquest projecte demostra **tres tipus de relacions** de bases de dades:
+
+### 1️⃣ Relació 1:N (Un a Molts) - Students ↔ Courses
+- **1 Curs** pot tenir **molts Estudiants**
+- **1 Estudiant** pertany a **1 Curs**
+- Implementació: Columna `course_id` a la taula `students` (clau forana)
+- Protecció: No es pot eliminar un curs amb estudiants assignats
+- 📖 Veure: [RELACIONS_1N.md](./RELACIONS_1N.md)
+
+### 2️⃣ Relació N:M (Molts a Molts) - Courses ↔ Teachers
+- **1 Curs** pot tenir **molts Professors** (equip docent)
+- **1 Professor** pot estar a **molts Cursos**
+- Implementació: Taula intermèdia `teaching_teams` amb dues claus foranes
+- Bidireccional: Es pot consultar des de qualsevol direcció
+- 📖 Veure: [RELACIONS_NM.md](./RELACIONS_NM.md)
+
+### 📊 Diagrama de Relacions
+
+```
+┌──────────────────┐         ┌──────────────────┐
+│     teachers     │ M     N │   teaching_teams │
+│                  │◄────────┤   (taula inter.) │
+│ id (PK)          │         │ course_id (FK)   │
+│ name             │         │ teacher_id (FK)  │
+│ email            │         │ UNIQUE(c,t)      │
+└──────────────────┘         └──────────────────┘
+                                      ▲
+                                      │ N
+                                      │
+                             ┌────────┴─────────┐
+                           1 │     courses      │ 1
+                             ├──────────────────┤◄────────┐
+                             │ id (PK)          │         │
+                             │ code (UNIQUE)    │         │
+                             │ name             │         │ N
+                             └──────────────────┘         │
+                                                  ┌───────┴────────┐
+                                                  │    students    │
+                                                  ├────────────────┤
+                                                  │ id (PK)        │
+                                                  │ name           │
+                                                  │ course_id (FK) │
+                                                  └────────────────┘
+```
+
+### 🧪 Tests Disponibles
+
+- `./test_relacions_1n.sh` - Verifica relacions 1:N
+- `./test_relacions_nm.sh` - Verifica relacions N:M
 
 ---
 
