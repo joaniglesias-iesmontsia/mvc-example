@@ -9,7 +9,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <h1 class="logo">🎓 Gestió Acadèmica<br>(exemple de CRUD seguint el patró MVC)</h1>
+            <h1 class="logo">🎓 Gestió Acadèmica<br>(exemple de CRUDs seguint el patró MVC)</h1>
             <ul class="nav-links">
                 <li><a href="/students">📚 Estudiants</a></li>
                 <li><a href="/teachers">👨‍🏫 Professors</a></li>
