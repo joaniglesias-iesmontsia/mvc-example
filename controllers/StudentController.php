@@ -7,13 +7,16 @@
  */
 
 require_once __DIR__ . '/../models/Student.php';
+require_once __DIR__ . '/../models/Course.php';
 require_once __DIR__ . '/../core/Router.php';
 
 class StudentController {
     private $studentModel;
+    private $courseModel;
     
     public function __construct() {
         $this->studentModel = new Student();
+        $this->courseModel = new Course();
     }
     
     /**
@@ -28,6 +31,8 @@ class StudentController {
      * Mostra el formulari per crear un nou estudiant
      */
     public function create() {
+        // Obtenim tots els cursos per al dropdown (Relació 1:N)
+        $courses = $this->courseModel->getAll();
         require_once __DIR__ . '/../views/students/create.php';
     }
     
@@ -78,6 +83,8 @@ class StudentController {
             Router::redirect('/students');
         }
         
+        // Obtenim tots els cursos per al dropdown (Relació 1:N)
+        $courses = $this->courseModel->getAll();
         require_once __DIR__ . '/../views/students/edit.php';
     }
     
@@ -165,9 +172,17 @@ class StudentController {
             $errors['age'] = "L'edat ha d'estar entre 16 i 99 anys";
         }
         
-        // Validar curs
-        if (empty($data['course']) || strlen(trim($data['course'])) < 2) {
-            $errors['course'] = "El curs és obligatori";
+        // Validar curs (clau forana - Relació 1:N)
+        if (empty($data['course_id'])) {
+            $errors['course_id'] = "El curs és obligatori";
+        } elseif (!is_numeric($data['course_id'])) {
+            $errors['course_id'] = "El curs seleccionat no és vàlid";
+        } else {
+            // Verificar que el curs existeix (integritat referencial)
+            $course = $this->courseModel->getById($data['course_id']);
+            if (!$course) {
+                $errors['course_id'] = "El curs seleccionat no existeix";
+            }
         }
         
         return $errors;

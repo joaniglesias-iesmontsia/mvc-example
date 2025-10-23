@@ -1,8 +1,18 @@
 -- Script d'inicialització de la base de dades
--- Crea les taules d'estudiants i professors
+-- Crea les taules de cursos, estudiants i professors amb relacions
 
 DROP TABLE IF EXISTS students;
 DROP TABLE IF EXISTS teachers;
+DROP TABLE IF EXISTS courses;
+
+-- Taula de cursos (1:N amb students)
+CREATE TABLE courses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    code TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    description TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
 -- Taula d'estudiants
 CREATE TABLE students (
@@ -10,8 +20,9 @@ CREATE TABLE students (
     name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     age INTEGER NOT NULL,
-    course TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    course_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE RESTRICT
 );
 
 -- Taula de professors
@@ -25,12 +36,19 @@ CREATE TABLE teachers (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Dades d'exemple d'estudiants
-INSERT INTO students (name, email, age, course) VALUES 
-    ('Maria García', 'maria.garcia@example.com', 20, 'DAW'),
-    ('Joan Martínez', 'joan.martinez@example.com', 21, 'DAW'),
-    ('Laura Sánchez', 'laura.sanchez@example.com', 19, 'ASIX'),
-    ('Pere Rodríguez', 'pere.rodriguez@example.com', 22, 'DAM');
+-- Dades d'exemple de cursos
+INSERT INTO courses (code, name, description) VALUES 
+    ('DAW', 'Desenvolupament d''Aplicacions Web', 'CFGS de programació web amb PHP, JavaScript i frameworks moderns'),
+    ('DAM', 'Desenvolupament d''Aplicacions Multiplataforma', 'CFGS de programació d''aplicacions per a diferents plataformes'),
+    ('ASIX', 'Administració de Sistemes Informàtics en Xarxa', 'CFGS d''administració de xarxes i sistemes'),
+    ('SMX', 'Sistemes Microinformàtics i Xarxes', 'CFGM de muntatge i manteniment d''equips');
+
+-- Dades d'exemple d'estudiants (amb course_id)
+INSERT INTO students (name, email, age, course_id) VALUES 
+    ('Maria García', 'maria.garcia@example.com', 20, 1),
+    ('Joan Martínez', 'joan.martinez@example.com', 21, 1),
+    ('Laura Sánchez', 'laura.sanchez@example.com', 19, 3),
+    ('Pere Rodríguez', 'pere.rodriguez@example.com', 22, 2);
 
 -- Dades d'exemple de professors
 INSERT INTO teachers (name, email, phone, department, specialty) VALUES 

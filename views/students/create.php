@@ -58,17 +58,24 @@ require_once __DIR__ . '/../layouts/header.php';
         </div>
         
         <div class="form-group">
-            <label for="course">Curs *</label>
-            <select id="course" name="course" required>
+            <label for="course_id">Curs * (Relació 1:N)</label>
+            <select id="course_id" name="course_id" required>
                 <option value="">Selecciona un curs...</option>
-                <option value="DAW" <?= (($_SESSION['old']['course'] ?? '') === 'DAW') ? 'selected' : '' ?>>DAW - Desenvolupament d'Aplicacions Web</option>
-                <option value="DAM" <?= (($_SESSION['old']['course'] ?? '') === 'DAM') ? 'selected' : '' ?>>DAM - Desenvolupament d'Aplicacions Multiplataforma</option>
-                <option value="ASIX" <?= (($_SESSION['old']['course'] ?? '') === 'ASIX') ? 'selected' : '' ?>>ASIX - Sistemes Informàtics i Xarxes</option>
-                <option value="SMX" <?= (($_SESSION['old']['course'] ?? '') === 'SMX') ? 'selected' : '' ?>>SMX - Sistemes Microinformàtics i Xarxes</option>
+                <?php foreach ($courses as $course): ?>
+                    <option 
+                        value="<?= $course['id'] ?>"
+                        <?= (($_SESSION['old']['course_id'] ?? '') == $course['id']) ? 'selected' : '' ?>
+                    >
+                        <?= htmlspecialchars($course['code']) ?> - <?= htmlspecialchars($course['name']) ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
-            <?php if (isset($_SESSION['errors']['course'])): ?>
-                <span class="error"><?= $_SESSION['errors']['course'] ?></span>
+            <?php if (isset($_SESSION['errors']['course_id'])): ?>
+                <span class="error"><?= $_SESSION['errors']['course_id'] ?></span>
             <?php endif; ?>
+            <small style="color: #666; font-size: 0.875rem; display: block; margin-top: 4px;">
+                💡 Els cursos es carreguen dinàmicament de la base de dades (taula <code>courses</code>)
+            </small>
         </div>
         
         <div class="form-actions">

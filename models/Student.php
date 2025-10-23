@@ -25,20 +25,26 @@ class Student {
     }
     
     /**
-     * Obtenir tots els estudiants
+     * Obtenir tots els estudiants amb el nom del curs (JOIN 1:N)
      */
     public function getAll() {
-        $query = "SELECT * FROM {$this->table} ORDER BY name ASC";
+        $query = "SELECT s.*, c.code as course_code, c.name as course_name 
+                  FROM {$this->table} s 
+                  LEFT JOIN courses c ON s.course_id = c.id 
+                  ORDER BY s.name ASC";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll();
     }
     
     /**
-     * Obtenir un estudiant per ID
+     * Obtenir un estudiant per ID amb el nom del curs (JOIN 1:N)
      */
     public function getById($id) {
-        $query = "SELECT * FROM {$this->table} WHERE id = :id";
+        $query = "SELECT s.*, c.code as course_code, c.name as course_name 
+                  FROM {$this->table} s 
+                  LEFT JOIN courses c ON s.course_id = c.id 
+                  WHERE s.id = :id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
@@ -46,11 +52,11 @@ class Student {
     }
     
     /**
-     * Crear un nou estudiant
+     * Crear un nou estudiant (amb course_id en relació 1:N)
      */
     public function create($data) {
-        $query = "INSERT INTO {$this->table} (name, email, age, course) 
-                  VALUES (:name, :email, :age, :course)";
+        $query = "INSERT INTO {$this->table} (name, email, age, course_id) 
+                  VALUES (:name, :email, :age, :course_id)";
         
         $stmt = $this->db->prepare($query);
         
@@ -58,13 +64,13 @@ class Student {
         $data['name'] = htmlspecialchars(strip_tags($data['name']));
         $data['email'] = htmlspecialchars(strip_tags($data['email']));
         $data['age'] = intval($data['age']);
-        $data['course'] = htmlspecialchars(strip_tags($data['course']));
+        $data['course_id'] = intval($data['course_id']);
         
         // Vincula els paràmetres
         $stmt->bindParam(':name', $data['name']);
         $stmt->bindParam(':email', $data['email']);
         $stmt->bindParam(':age', $data['age']);
-        $stmt->bindParam(':course', $data['course']);
+        $stmt->bindParam(':course_id', $data['course_id']);
         
         if ($stmt->execute()) {
             return $this->db->lastInsertId();
@@ -73,11 +79,11 @@ class Student {
     }
     
     /**
-     * Actualitzar un estudiant existent
+     * Actualitzar un estudiant existent (amb course_id en relació 1:N)
      */
     public function update($id, $data) {
         $query = "UPDATE {$this->table} 
-                  SET name = :name, email = :email, age = :age, course = :course 
+                  SET name = :name, email = :email, age = :age, course_id = :course_id 
                   WHERE id = :id";
         
         $stmt = $this->db->prepare($query);
@@ -86,14 +92,14 @@ class Student {
         $data['name'] = htmlspecialchars(strip_tags($data['name']));
         $data['email'] = htmlspecialchars(strip_tags($data['email']));
         $data['age'] = intval($data['age']);
-        $data['course'] = htmlspecialchars(strip_tags($data['course']));
+        $data['course_id'] = intval($data['course_id']);
         
         // Vincula els paràmetres
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':name', $data['name']);
         $stmt->bindParam(':email', $data['email']);
         $stmt->bindParam(':age', $data['age']);
-        $stmt->bindParam(':course', $data['course']);
+        $stmt->bindParam(':course_id', $data['course_id']);
         
         return $stmt->execute();
     }

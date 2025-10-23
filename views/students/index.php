@@ -33,7 +33,14 @@ require_once __DIR__ . '/../layouts/header.php';
                         <td><?= htmlspecialchars($student['name']) ?></td>
                         <td><?= htmlspecialchars($student['email']) ?></td>
                         <td><?= htmlspecialchars($student['age']) ?> anys</td>
-                        <td><span class="badge"><?= htmlspecialchars($student['course']) ?></span></td>
+                        <td>
+                            <span class="badge">
+                                <?= htmlspecialchars($student['course_code'] ?? 'Sense curs') ?>
+                            </span>
+                            <?php if (!empty($student['course_name'])): ?>
+                                <br><small style="color: #666;"><?= htmlspecialchars($student['course_name']) ?></small>
+                            <?php endif; ?>
+                        </td>
                         <td><?= date('d/m/Y', strtotime($student['created_at'])) ?></td>
                         <td class="actions">
                             <a href="/students/edit/<?= $student['id'] ?>" class="btn btn-small btn-secondary">✏️ Editar</a>

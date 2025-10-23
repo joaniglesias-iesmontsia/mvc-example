@@ -13,6 +13,7 @@
             <ul class="nav-links">
                 <li><a href="/students">📚 Estudiants</a></li>
                 <li><a href="/teachers">👨‍🏫 Professors</a></li>
+                <li><a href="/courses">🎯 Cursos</a></li>
             </ul>
         </div>
     </nav>

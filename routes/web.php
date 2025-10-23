@@ -64,6 +64,29 @@ $router->get('/teachers/delete/:id', 'TeacherController@delete');
 
 
 // ============================================
+// RUTES DE CURSOS (Relació 1:N amb Estudiants)
+// ============================================
+
+// Llistat de tots els cursos
+$router->get('/courses', 'CourseController@index');
+
+// Formulari per crear un nou curs
+$router->get('/courses/create', 'CourseController@create');
+
+// Processa la creació d'un curs (POST)
+$router->post('/courses/store', 'CourseController@store');
+
+// Formulari per editar un curs
+$router->get('/courses/edit/:id', 'CourseController@edit');
+
+// Processa l'actualització d'un curs (POST)
+$router->post('/courses/update', 'CourseController@update');
+
+// Elimina un curs (només si no té estudiants assignats)
+$router->get('/courses/delete/:id', 'CourseController@delete');
+
+
+// ============================================
 // NOTES PER ALS ESTUDIANTS
 // ============================================
 
