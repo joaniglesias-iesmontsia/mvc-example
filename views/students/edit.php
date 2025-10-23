@@ -5,11 +5,11 @@ require_once __DIR__ . '/../layouts/header.php';
 
 <div class="page-header">
     <h2>✏️ Editar Estudiant</h2>
-    <a href="index.php" class="btn btn-secondary">⬅️ Tornar</a>
+    <a href="/students" class="btn btn-secondary">⬅️ Tornar</a>
 </div>
 
 <div class="form-container">
-    <form action="index.php?action=update" method="POST" class="form">
+    <form action="/students/update" method="POST" class="form">
         <input type="hidden" name="id" value="<?= htmlspecialchars($student['id']) ?>">
         
         <div class="form-group">
@@ -83,7 +83,7 @@ require_once __DIR__ . '/../layouts/header.php';
         
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">💾 Actualitzar</button>
-            <a href="index.php" class="btn btn-secondary">❌ Cancel·lar</a>
+            <a href="/students" class="btn btn-secondary">❌ Cancel·lar</a>
         </div>
     </form>
 </div>

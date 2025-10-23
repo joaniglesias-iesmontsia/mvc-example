@@ -5,12 +5,12 @@ require_once __DIR__ . '/../layouts/header.php';
 
 <div class="page-header">
     <h2>📋 Llistat d'Estudiants</h2>
-    <a href="index.php?action=create" class="btn btn-primary">➕ Afegir Estudiant</a>
+    <a href="/students/create" class="btn btn-primary">➕ Afegir Estudiant</a>
 </div>
 
 <?php if (empty($students)): ?>
     <div class="alert alert-info">
-        <p>No hi ha estudiants registrats. <a href="index.php?action=create">Crea'n un de nou!</a></p>
+        <p>No hi ha estudiants registrats. <a href="/students/create">Crea'n un de nou!</a></p>
     </div>
 <?php else: ?>
     <div class="table-container">
@@ -36,8 +36,8 @@ require_once __DIR__ . '/../layouts/header.php';
                         <td><span class="badge"><?= htmlspecialchars($student['course']) ?></span></td>
                         <td><?= date('d/m/Y', strtotime($student['created_at'])) ?></td>
                         <td class="actions">
-                            <a href="index.php?action=edit&id=<?= $student['id'] ?>" class="btn btn-small btn-secondary">✏️ Editar</a>
-                            <a href="index.php?action=delete&id=<?= $student['id'] ?>" 
+                            <a href="/students/edit/<?= $student['id'] ?>" class="btn btn-small btn-secondary">✏️ Editar</a>
+                            <a href="/students/delete/<?= $student['id'] ?>" 
                                class="btn btn-small btn-danger"
                                onclick="return confirm('Estàs segur que vols eliminar aquest estudiant?')">
                                🗑️ Eliminar

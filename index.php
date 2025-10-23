@@ -1,58 +1,41 @@
 <?php
 /**
- * INDEX.PHP - Front Controller
+ * INDEX.PHP - Front Controller amb Sistema de Rutes
  * 
- * Aquest és el punt d'entrada de l'aplicació MVC
- * Gestiona totes les peticions i les envia al controlador adequat
+ * Aquest és el punt d'entrada ÚNIC de l'aplicació MVC.
+ * Utilitza un sistema de rutes centralitzat similar a Laravel.
+ * 
+ * Flux d'execució:
+ * 1. Inicia la sessió
+ * 2. Carrega el Router
+ * 3. Carrega les rutes definides a routes/web.php
+ * 4. El router analitza la URL i executa el controlador corresponent
+ * 
+ * Avantatges:
+ * - Totes les rutes en un sol lloc (routes/web.php)
+ * - URLs netes i semàntiques (/students/create en lloc de ?action=create)
+ * - Fàcil d'escalar i mantenir
+ * - Preparació per a frameworks moderns (Laravel, Symfony, etc.)
  */
 
 // Inicia la sessió per gestionar missatges flash i validacions
 session_start();
 
-// Inclou el controlador
-require_once __DIR__ . '/controllers/StudentController.php';
+// Carrega el sistema de rutes
+require_once __DIR__ . '/core/Router.php';
 
-// Crea una instància del controlador
-$controller = new StudentController();
+// Crea una instància del router
+$router = new Router();
 
-// Obté l'acció de la URL (per defecte: index)
-$action = $_GET['action'] ?? 'index';
+// Carrega totes les rutes de l'aplicació
+require_once __DIR__ . '/routes/web.php';
 
-// Router simple: crida al mètode del controlador segons l'acció
+// Executa la ruta corresponent a la petició actual
 try {
-    switch ($action) {
-        case 'index':
-            $controller->index();
-            break;
-            
-        case 'create':
-            $controller->create();
-            break;
-            
-        case 'store':
-            $controller->store();
-            break;
-            
-        case 'edit':
-            $controller->edit();
-            break;
-            
-        case 'update':
-            $controller->update();
-            break;
-            
-        case 'delete':
-            $controller->delete();
-            break;
-            
-        default:
-            // Si l'acció no existeix, redirigeix a la pàgina principal
-            header('Location: index.php');
-            exit;
-    }
+    $router->dispatch();
 } catch (Exception $e) {
     // Gestió d'errors global
     $_SESSION['error'] = "Error: " . $e->getMessage();
-    header('Location: index.php');
+    header('Location: /');
     exit;
 }

@@ -1,0 +1,14 @@
+# Activa el motor de reescriptura
+RewriteEngine On
+
+# Redirigeix totes les peticions que NO siguin fitxers o directoris reals
+# a index.php, mantenint la URL original
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Evita mostrar el llistat de directoris
+Options -Indexes
+
+# Habilita els fitxers .htaccess en subdirectoris
+AllowOverride All

@@ -7,6 +7,7 @@
  */
 
 require_once __DIR__ . '/../models/Student.php';
+require_once __DIR__ . '/../core/Router.php';
 
 class StudentController {
     private $studentModel;
@@ -35,8 +36,7 @@ class StudentController {
      */
     public function store() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php');
-            exit;
+            Router::redirect('/students');
         }
         
         $errors = $this->validateStudent($_POST);
@@ -46,8 +46,7 @@ class StudentController {
             
             if ($result) {
                 $_SESSION['success'] = "Estudiant creat correctament!";
-                header('Location: index.php');
-                exit;
+                Router::redirect('/students');
             } else {
                 $_SESSION['error'] = "Error al crear l'estudiant";
             }
@@ -56,27 +55,27 @@ class StudentController {
             $_SESSION['old'] = $_POST;
         }
         
-        header('Location: index.php?action=create');
-        exit;
+        Router::redirect('/students/create');
     }
     
     /**
      * Mostra el formulari per editar un estudiant
      */
-    public function edit() {
-        $id = $_GET['id'] ?? null;
+    public function edit($id = null) {
+        // Si no es passa l'ID com a paràmetre, prova d'obtenir-lo de GET
+        if ($id === null) {
+            $id = $_GET['id'] ?? null;
+        }
         
         if (!$id) {
-            header('Location: index.php');
-            exit;
+            Router::redirect('/students');
         }
         
         $student = $this->studentModel->getById($id);
         
         if (!$student) {
             $_SESSION['error'] = "Estudiant no trobat";
-            header('Location: index.php');
-            exit;
+            Router::redirect('/students');
         }
         
         require_once __DIR__ . '/../views/students/edit.php';
@@ -87,15 +86,13 @@ class StudentController {
      */
     public function update() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php');
-            exit;
+            Router::redirect('/students');
         }
         
         $id = $_POST['id'] ?? null;
         
         if (!$id) {
-            header('Location: index.php');
-            exit;
+            Router::redirect('/students');
         }
         
         $errors = $this->validateStudent($_POST, $id);
@@ -105,8 +102,7 @@ class StudentController {
             
             if ($result) {
                 $_SESSION['success'] = "Estudiant actualitzat correctament!";
-                header('Location: index.php');
-                exit;
+                Router::redirect('/students');
             } else {
                 $_SESSION['error'] = "Error al actualitzar l'estudiant";
             }
@@ -115,19 +111,20 @@ class StudentController {
             $_SESSION['old'] = $_POST;
         }
         
-        header('Location: index.php?action=edit&id=' . $id);
-        exit;
+        Router::redirect('/students/edit/' . $id);
     }
     
     /**
      * Elimina un estudiant
      */
-    public function delete() {
-        $id = $_GET['id'] ?? null;
+    public function delete($id = null) {
+        // Si no es passa l'ID com a paràmetre, prova d'obtenir-lo de GET
+        if ($id === null) {
+            $id = $_GET['id'] ?? null;
+        }
         
         if (!$id) {
-            header('Location: index.php');
-            exit;
+            Router::redirect('/students');
         }
         
         $result = $this->studentModel->delete($id);
@@ -138,8 +135,7 @@ class StudentController {
             $_SESSION['error'] = "Error al eliminar l'estudiant";
         }
         
-        header('Location: index.php');
-        exit;
+        Router::redirect('/students');
     }
     
     /**

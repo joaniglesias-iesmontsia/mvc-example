@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Gestió d\'Estudiants' ?></title>
-    <link rel="stylesheet" href="public/css/style.css">
+        <link rel="stylesheet" href="/public/css/style.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <h1 class="logo">🎓 Gestió d'Estudiants (exemple de CRUD seguint el patró MVC)</h1>
+            <h1 class="logo">🎓 Gestió Acadèmica<br>(exemple de CRUD seguint el patró MVC)</h1>
             <ul class="nav-links">
-                <li><a href="index.php">Llistat</a></li>
-                <li><a href="index.php?action=create" class="btn-primary">➕ Nou Estudiant</a></li>
+                <li><a href="/students">📚 Estudiants</a></li>
+                <li><a href="/teachers">👨‍🏫 Professors</a></li>
             </ul>
         </div>
     </nav>
