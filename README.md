@@ -1,205 +1,335 @@
 // filepath: /Users/joan/Documents/Documents - INS Montsià/Repos/Cursos/25-26/mvc-example/README.md
-# 🎓 Exemple Pràctic del Patró MVC amb PHP
+# 🎓 MVC amb PHP — Guia per a Estudiants
 
-## 📚 Què és el Patró MVC?
-
-El patró **Model-Vista-Controlador (MVC)** és un patró de disseny arquitectònic que organitza el codi d'una aplicació en **tres components principals** que treballen junts però de forma independent:
-
-```
-┌──────────────┐      ┌──────────────┐      ┌──────────────┐
-│   MODEL      │◄─────│ CONTROLLER   │─────►│    VIEW      │
-│  (Dades)     │      │  (Lògica)    │      │(Interfície)  │
-└──────────────┘      └──────────────┘      └──────────────┘
-       ▲                     ▲                      ▲
-       │                     │                      │
-    Base de                Gestiona              Mostra
-     Dades               Peticions             Informació
-```
-
-### 🔹 Components del MVC
-
-#### 1. **MODEL** - La Capa de Dades
-- **Responsabilitat**: Gestionar les dades i la lògica de negoci
-- **No sap res sobre**: Com es mostren les dades (Vistes) o com arriben les peticions (Controladors)
-- **En aquest projecte**: `models/Student.php`, `models/Teacher.php`
-
-#### 2. **VIEW** - La Capa de Presentació
-- **Responsabilitat**: Mostrar la informació a l'usuari (HTML, CSS)
-- **No sap res sobre**: D'on venen les dades o com es processen
-- **En aquest projecte**: Tots els fitxers dins `views/`
-
-#### 3. **CONTROLLER** - La Capa de Coordinació
-- **Responsabilitat**: Rebre peticions, coordinar Model i Vista
-- **És l'intermediari**: Entre l'usuari i les dades
-- **En aquest projecte**: `controllers/StudentController.php`, `controllers/TeacherController.php`
-
-#### 4. **ROUTER** - El Sistema de Rutes ✨ NOU
-- **Responsabilitat**: Analitzar la URL i cridar al controlador adequat
-- **Centralitza**: Totes les rutes de l'aplicació en un sol fitxer
-- **En aquest projecte**: `core/Router.php` i `routes/web.php`
+Objectiu: entendre el patró MVC i com s’organitza el codi d’aquest projecte perquè el puguis llegir, modificar i ampliar amb seguretat.
 
 ---
 
-## 🗂️ Estructura del Projecte
+## 📚 Què és el patró MVC?
+
+El patró **Model–Vista–Controlador (MVC)** separa l’aplicació en tres peces clarament diferenciades:
+
+```
+┌──────────────┐      ┌──────────────┐      ┌──────────────┐
+│    MODEL     │◄─────│ CONTROLLER   │─────►│     VIEW     │
+│ (Dades)      │      │ (Lògica)     │      │ (Interfície) │
+└──────────────┘      └──────────────┘      └──────────────┘
+       ▲                     ▲                      ▲
+       │                     │                      │
+   Base de Dades        Gestiona peticions       Mostra informació
+```
+
+- Model: codi d’accés a dades i lògica de negoci (no sap res d’HTML).
+- Controller: rep la petició, valida dades i demana al Model; després passa dades a la Vista.
+- View: HTML/CSS/JS per mostrar dades (no fa consultes a la BD ni valida negoci).
+
+En aquest projecte també hi ha un component clau: el Router.
+
+```
+Navegador → .htaccess/router → index.php (Front Controller)
+          → Router (core/Router.php) + rutes (routes/web.php)
+          → Controller → Model → View (layouts + vista)
+          → Resposta HTML
+```
+
+---
+
+## 🗂️ Estructura del projecte
 
 ```
 mvc-example/
 │
-├── index.php                    # 🚪 Front Controller ÚNIC (punt d'entrada)
-│
-├── .htaccess                    # ⚙️ Configuració Apache per URLs netes
+├── index.php                    # 🚪 Punt d'entrada (Front Controller)
+├── .htaccess                    # ⚙️ Reescriptura d’URLs (si uses Apache)
 │
 ├── core/
-│   └── Router.php              # 🔀 Sistema de gestió de rutes
+│   └── Router.php               # 🔀 Sistema de rutes (matching i dispatch)
 │
 ├── routes/
-│   └── web.php                 # 📍 DEFINICIÓ DE TOTES LES RUTES
+│   └── web.php                  # 📍 Definició CENTRALITZADA de rutes
 │
 ├── config/
-│   └── Database.php            # ⚙️ Configuració de la connexió a BD
+│   └── Database.php             # 🧱 Connexió a BD (PDO, Singleton)
 │
 ├── models/
-│   ├── Student.php             # 📊 MODEL - Gestió de dades d'estudiants
-│   └── Teacher.php             # 📊 MODEL - Gestió de dades de professors
+│   ├── Student.php              # 📊 Model d’Estudiants
+│   └── Teacher.php              # 📊 Model de Professors
 │
 ├── controllers/
-│   ├── StudentController.php   # 🎮 CONTROLLER - Lògica d'estudiants
-│   └── TeacherController.php   # 🎮 CONTROLLER - Lògica de professors
+│   ├── StudentController.php    # 🎮 Lògica d’Estudiants
+│   └── TeacherController.php    # 🎮 Lògica de Professors
 │
 ├── views/
 │   ├── layouts/
-│   │   ├── header.php         # 🎨 Capçalera HTML compartida
-│   │   └── footer.php         # 🎨 Peu de pàgina compartit
+│   │   ├── header.php           # 🎨 Capçalera (HTML compartit)
+│   │   └── footer.php           # 🎨 Peu de pàgina (HTML compartit)
 │   ├── students/
-│   │   ├── index.php          # 👁️ VISTA - Llistat d'estudiants
-│   │   ├── create.php         # 👁️ VISTA - Formulari de creació
-│   │   └── edit.php           # 👁️ VISTA - Formulari d'edició
+│   │   ├── index.php            # 👁️ Llistat d’estudiants
+│   │   ├── create.php           # 👁️ Formulari de creació
+│   │   └── edit.php             # 👁️ Formulari d’edició
 │   └── teachers/
-│       ├── index.php          # 👁️ VISTA - Llistat de professors
-│       ├── create.php         # 👁️ VISTA - Formulari de creació
-│       └── edit.php           # 👁️ VISTA - Formulari d'edició
+│       ├── index.php            # 👁️ Llistat de professors
+│       ├── create.php           # 👁️ Formulari de creació
+│       └── edit.php             # 👁️ Formulari d’edició
 │
 ├── public/
 │   └── css/
-│       └── style.css          # 🎨 Estils CSS
+│       └── style.css            # 🎨 Estils
 │
 └── database/
-    ├── init.php               # 🔧 Script d'inicialització de BD
-    ├── init.sql               # 📝 Estructura de la BD
-    └── students.db            # 💾 Base de dades SQLite
+    ├── init.php                 # 🔧 Inicialitza la BD (SQLite)
+    ├── init.sql                 # 📝 Esquema + dades de mostra
+    └── students.db              # 💾 Fitxer SQLite (generat)
 ```
 
 ---
 
-## � Sistema de Rutes (Routing)
+## 🔀 Sistema de rutes (Routing)
 
-Aquest projecte utilitza un **sistema de rutes centralitzat**, similar al que usen frameworks moderns com Laravel, Symfony o Slim.
+Les rutes estan definides a `routes/web.php` i són gestionades per `core/Router.php`. Això permet tenir **URLs netes** i tota la navegació en un **únic lloc**.
 
-### 📍 Com Funcionen les Rutes?
-
-**Abans (sense router):**
-```
-URL: index.php?action=edit&id=5
-Problema: URLs llargues, poc semàntiques, difícils d'escalar
-```
-
-**Ara (amb router):**
-```
-URL: /students/edit/5
-Avantatge: URLs netes, semàntiques, fàcils de mantenir
-```
-
-### 🎯 Definició de Rutes (`routes/web.php`)
+Exemple de rutes dels estudiants:
 
 ```php
-// Llistat d'estudiants
+// Llistat
 $router->get('/students', 'StudentController@index');
 
-// Crear estudiant
+// Crear
 $router->get('/students/create', 'StudentController@create');
 $router->post('/students/store', 'StudentController@store');
 
-// Editar estudiant (amb paràmetre dinàmic :id)
+// Editar
 $router->get('/students/edit/:id', 'StudentController@edit');
 $router->post('/students/update', 'StudentController@update');
 
-// Eliminar estudiant
+// Eliminar
 $router->get('/students/delete/:id', 'StudentController@delete');
 ```
 
-### 🔧 Com Funciona Internament?
+Per professors es segueix el mateix patró (`/teachers`, ...).
 
-#### 1️⃣ **L'usuari accedeix a una URL**
+Notes importants:
+- Les rutes específiques han d’anar abans de les genèriques (`/students/create` abans que `/students/:id`).
+- Els paràmetres dinàmics es defineixen com `:id`, `:slug`, etc.
+
+---
+
+## 🔄 Flux complet d’una petició (exemple: llistar estudiants)
+
 ```
-GET /students/edit/5
+👤 Usuari         🌐 GET /students
+   │
+   ▼
+🧭 .htaccess / Router → 🚪 index.php (Front Controller)
+                         │
+                         ├─ 🔀 Router: troba la ruta '/students'
+                         │        ⇒ StudentController@index
+                         │
+                         ├─ 🎮 Controller: demana dades al Model
+                         │        ⇒ Student::getAll()
+                         │
+                         ├─ 📊 Model: consulta BD i retorna dades
+                         │
+                         └─ 👁️ View: carrega layouts/header.php + views/students/index.php + layouts/footer.php
+                                     ⇒ Resposta HTML al navegador
 ```
 
-#### 2️⃣ **El Router analitza la URL**
+Mini codi real que reflecteix aquest flux:
+
 ```php
-// core/Router.php
-public function dispatch() {
-    $method = 'GET';
-    $uri = '/students/edit/5';
-    
-    // Busca la ruta corresponent
-    foreach ($this->routes['GET'] as $route => $action) {
-        if ($this->match('/students/edit/:id', '/students/edit/5')) {
-            // Coincidència! Extreu el paràmetre: id = 5
-            $this->callAction('StudentController@edit', [5]);
-        }
+// routes/web.php
+$router->get('/students', 'StudentController@index');
+
+// controllers/StudentController.php
+public function index() {
+    $students = $this->studentModel->getAll();
+    require __DIR__ . '/../views/students/index.php';
+}
+
+// models/Student.php
+public function getAll() {
+    $stmt = $this->db->prepare('SELECT * FROM students ORDER BY name ASC');
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+```
+
+### 📊 Diagrama de seqüència detallat
+
+```
+👤 Usuari          .htaccess       🚪 index.php      🔀 Router        🎮 Controller      📊 Model          💾 BD           👁️ View
+   │                   │                │                │                 │                 │               │              │
+   │  GET /students    │                │                │                 │                 │               │              │
+   ├──────────────────►│                │                │                 │                 │               │              │
+   │                   │                │                │                 │                 │               │              │
+   │                   │ Redirigeix a   │                │                 │                 │               │              │
+   │                   │   index.php    │                │                 │                 │               │              │
+   │                   ├───────────────►│                │                 │                 │               │              │
+   │                   │                │                │                 │                 │               │              │
+   │                   │                │ Carrega Router │                 │                 │               │              │
+   │                   │                │ i routes/web   │                 │                 │               │              │
+   │                   │                ├───────────────►│                 │                 │               │              │
+   │                   │                │                │                 │                 │               │              │
+   │                   │                │                │ Troba ruta      │                 │               │              │
+   │                   │                │                │ '/students'     │                 │               │              │
+   │                   │                │                │ ⇒ Crida         │                 │               │              │
+   │                   │                │                │ StudentController│                │               │              │
+   │                   │                │                │ @index          │                 │               │              │
+   │                   │                │                ├────────────────►│                 │               │              │
+   │                   │                │                │                 │                 │               │              │
+   │                   │                │                │                 │ getAll()        │               │              │
+   │                   │                │                │                 ├────────────────►│               │              │
+   │                   │                │                │                 │                 │               │              │
+   │                   │                │                │                 │                 │ SELECT * FROM │              │
+   │                   │                │                │                 │                 │   students    │              │
+   │                   │                │                │                 │                 ├──────────────►│              │
+   │                   │                │                │                 │                 │               │              │
+   │                   │                │                │                 │                 │ Retorna files │              │
+   │                   │                │                │                 │                 │◄──────────────┤              │
+   │                   │                │                │                 │                 │               │              │
+   │                   │                │                │                 │ Array estudiants│               │              │
+   │                   │                │                │                 │◄────────────────┤               │              │
+   │                   │                │                │                 │                 │               │              │
+   │                   │                │                │                 │ require          │               │              │
+   │                   │                │                │                 │ views/students/  │               │              │
+   │                   │                │                │                 │ index.php        │               │              │
+   │                   │                │                │                 ├─────────────────────────────────────────────────►│
+   │                   │                │                │                 │                 │               │              │
+   │                   │                │                │                 │                 │               │ Genera HTML  │
+   │                   │                │                │                 │                 │               │ amb foreach  │
+   │                   │                │                │                 │                 │               │              │
+   │  Mostra pàgina HTML                │                │                 │                 │               │              │
+   │◄────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+```
+
+### 📝 Pas a pas de la seqüència:
+
+1️⃣ **Usuari** fa GET `/students` al navegador  
+2️⃣ **.htaccess** captura la petició i redirigeix a `index.php`  
+3️⃣ **index.php** (Front Controller) carrega el Router i les rutes definides a `routes/web.php`  
+4️⃣ **Router** analitza la URL, troba la ruta `/students` i crida `StudentController@index`  
+5️⃣ **Controller** demana les dades cridant `$this->studentModel->getAll()`  
+6️⃣ **Model** prepara i executa la consulta SQL a la base de dades  
+7️⃣ **Base de Dades** retorna les files de la taula `students`  
+8️⃣ **Model** retorna un array d'estudiants al Controller  
+9️⃣ **Controller** carrega la vista `views/students/index.php` passant-li les dades  
+🔟 **View** genera l'HTML iterant sobre l'array d'estudiants  
+1️⃣1️⃣ **Usuari** rep la pàgina HTML completa al navegador
+
+---
+
+## ✍️ Flux de creació (exemple: crear estudiant)
+
+1) GET `/students/create` → mostra formulari.
+
+```php
+// routes/web.php
+$router->get('/students/create', 'StudentController@create');
+
+// controllers/StudentController.php
+public function create() {
+    require __DIR__ . '/../views/students/create.php';
+}
+```
+
+2) POST `/students/store` → valida i guarda, després redirigeix.
+
+```php
+// routes/web.php
+$router->post('/students/store', 'StudentController@store');
+
+// controllers/StudentController.php
+public function store() {
+    $data = $_POST;
+    // (Validacions bàsiques...)
+    if ($this->studentModel->create($data)) {
+        $_SESSION['success'] = 'Estudiant creat correctament';
+        return Router::redirect('/students');
     }
+    $_SESSION['error'] = 'No s’ha pogut crear';
+    return Router::redirect('/students/create');
 }
 ```
 
-#### 3️⃣ **El Router crida al Controlador**
-```php
-// Crea instància: $controller = new StudentController();
-// Crida mètode: $controller->edit(5);
-```
+3) Model guarda a la BD amb PDO i consultes preparades.
 
-#### 4️⃣ **El Controlador processa i mostra la Vista**
 ```php
-public function edit($id) {
-    $student = $this->studentModel->getById($id);
-    require_once 'views/students/edit.php';
+// models/Student.php
+public function create(array $data): bool {
+    $sql = 'INSERT INTO students (name, email, age, course) VALUES (:name, :email, :age, :course)';
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(':name', $data['name']);
+    $stmt->bindValue(':email', $data['email']);
+    $stmt->bindValue(':age', $data['age']);
+    $stmt->bindValue(':course', $data['course']);
+    return $stmt->execute();
 }
 ```
 
-### ✨ Avantatges del Sistema de Rutes
+---
 
-#### ✅ **Centralització**
-Totes les rutes en un sol fitxer (`routes/web.php`), fàcil de veure què fa l'aplicació.
+## ✅ Bones pràctiques aplicades
 
-#### ✅ **URLs Netes i Semàntiques**
-```
-❌ ABANS: index.php?action=edit&id=5
-✅ ARA:   /students/edit/5
-```
+- PDO + consultes preparades (seguretat davant injeccions SQL).
+- `htmlspecialchars()` a les vistes (evitar XSS).
+- Validació al Controller i missatges flash via sessió.
+- Layouts compartits (`views/layouts/header.php` i `footer.php`).
+- Router centralitzat i redireccions amb `Router::redirect()`.
 
-#### ✅ **Escalabilitat**
-Afegir nous models és molt més fàcil:
-```php
-// Només cal afegir aquestes línies a routes/web.php
-$router->get('/courses', 'CourseController@index');
-$router->get('/courses/create', 'CourseController@create');
-// etc.
-```
+---
 
-#### ✅ **Preparació per a Frameworks Professionals**
-Laravel, Symfony, i altres frameworks usen exactament aquest patró.
+## � Com executar el projecte
 
-#### ✅ **Paràmetres Dinàmics**
-```php
-$router->get('/students/:id', 'StudentController@show');
-$router->get('/posts/:slug', 'PostController@show');
-$router->get('/users/:username/posts/:id', 'PostController@userPost');
+1) Inicialitza la base de dades (SQLite):
+
+```bash
+php database/init.php
 ```
 
-### 🎓 Com Afegir Noves Rutes?
+2) Engega el servidor de desenvolupament de PHP (recomanat indicar el router):
 
-**Exemple: Crear un CRUD de Cursos**
+```bash
+php -S localhost:8000 index.php
+```
 
-#### 1. Defineix les rutes (`routes/web.php`):
+3) Obre al navegador:
+
+- Estudiants: http://localhost:8000/students
+- Professors: http://localhost:8000/teachers
+
+Notes:
+- Si utilitzes Apache, assegura’t que `.htaccess` estigui actiu (AllowOverride All) per a les URLs netes.
+- A les vistes, s’utilitza un camí absolut per al CSS: `/public/css/style.css` (això evita problemes en rutes profundes).
+
+---
+
+## 📋 Rutes disponibles (resum)
+
+Estudiants
+- GET  `/students` → index
+- GET  `/students/create` → create
+- POST `/students/store` → store
+- GET  `/students/edit/:id` → edit
+- POST `/students/update` → update
+- GET  `/students/delete/:id` → delete
+
+Professors
+- GET  `/teachers` → index
+- GET  `/teachers/create` → create
+- POST `/teachers/store` → store
+- GET  `/teachers/edit/:id` → edit
+- POST `/teachers/update` → update
+- GET  `/teachers/delete/:id` → delete
+
+---
+
+## � Com afegir un nou mòdul (ex. Cursos)
+
+1) Crea `models/Course.php` (mètodes: `getAll`, `getById`, `create`, `update`, `delete`).
+2) Crea `controllers/CourseController.php` amb accions CRUD.
+3) Crea vistes a `views/courses/` (`index.php`, `create.php`, `edit.php`).
+4) Afegeix rutes a `routes/web.php`:
+
 ```php
 $router->get('/courses', 'CourseController@index');
 $router->get('/courses/create', 'CourseController@create');
@@ -209,403 +339,41 @@ $router->post('/courses/update', 'CourseController@update');
 $router->get('/courses/delete/:id', 'CourseController@delete');
 ```
 
-#### 2. Crea el Controlador (`controllers/CourseController.php`):
-```php
-class CourseController {
-    public function index() { ... }
-    public function create() { ... }
-    public function store() { ... }
-    public function edit($id) { ... }
-    public function update() { ... }
-    public function delete($id) { ... }
-}
-```
-
-#### 3. Crea el Model i les Vistes
-- Model: `models/Course.php`
-- Vistes: `views/courses/index.php`, `create.php`, `edit.php`
-
-**I ja està! El router s'encarrega de la resta.** 🚀
-
-### ⚠️ Important: Ordre de les Rutes
-
-Les rutes més específiques han d'anar **ABANS** que les genèriques:
-
-```php
-✅ CORRECTE:
-$router->get('/students/create', 'StudentController@create');
-$router->get('/students/:id', 'StudentController@show');
-
-❌ MALAMENT:
-$router->get('/students/:id', 'StudentController@show');
-$router->get('/students/create', 'StudentController@create');
-// ↑ Mai s'executarà! :id captura "create" com a paràmetre
-```
+Amb això, tot queda integrat al mateix flux MVC i routing centralitzat.
 
 ---
 
-## �🔄 Flux d'Execució: Com Funciona el MVC
+## 🔍 Exercicis recomanats
 
-### Exemple 1: Llistar Estudiants
+Bàsic
+1) Afegeix el camp “població” a Estudiants i mostra’l al llistat.
+2) Valida que l’edat sigui ≥ 16.
 
-```
-👤 Usuari                🚪 Front             🎮 Controller        📊 Model           👁️ View
-   │                    Controller              │                   │                  │
-   │                       │                    │                   │                  │
-   │  1. Accedeix          │                    │                   │                  │
-   │  index.php            │                    │                   │                  │
-   ├──────────────────────►│                    │                   │                  │
-   │                       │                    │                   │                  │
-   │                       │  2. Crida index()  │                   │                  │
-   │                       ├───────────────────►│                   │                  │
-   │                       │                    │                   │                  │
-   │                       │                    │  3. getAll()      │                  │
-   │                       │                    ├──────────────────►│                  │
-   │                       │                    │                   │                  │
-   │                       │                    │  4. Retorna       │                  │
-   │                       │                    │     estudiants    │                  │
-   │                       │                    │◄──────────────────┤                  │
-   │                       │                    │                   │                  │
-   │                       │                    │  5. Carrega       │                  │
-   │                       │                    │     index.php     │                  │
-   │                       │                    ├──────────────────────────────────────►│
-   │                       │                    │                   │                  │
-   │  6. Mostra HTML       │                    │                   │                  │
-   │◄──────────────────────┴────────────────────┴───────────────────┴──────────────────┤
-```
+Intermedi
+3) Cerca per nom o email (students i teachers).
+4) Paginació (10 per pàgina) a `/students` i `/teachers`.
 
-### 📝 Codi Real del Projecte:
-
-#### 1️⃣ **Front Controller** (`index.php`)
-```php
-// Punt d'entrada de l'aplicació
-$controller = new StudentController();
-$action = $_GET['action'] ?? 'index';
-
-switch ($action) {
-    case 'index':
-        $controller->index();  // Crida al mètode index del controlador
-        break;
-}
-```
-
-#### 2️⃣ **Controller** (`controllers/StudentController.php`)
-```php
-public function index() {
-    // Demana les dades al Model
-    $students = $this->studentModel->getAll();
-    
-    // Passa les dades a la Vista
-    require_once __DIR__ . '/../views/students/index.php';
-}
-```
-
-#### 3️⃣ **Model** (`models/Student.php`)
-```php
-public function getAll() {
-    // Consulta SQL per obtenir tots els estudiants
-    $query = "SELECT * FROM students ORDER BY name ASC";
-    $stmt = $this->db->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll();  // Retorna un array d'estudiants
-}
-```
-
-#### 4️⃣ **View** (`views/students/index.php`)
-```php
-<?php foreach ($students as $student): ?>
-    <tr>
-        <td><?= htmlspecialchars($student['name']) ?></td>
-        <td><?= htmlspecialchars($student['email']) ?></td>
-        <td><?= htmlspecialchars($student['age']) ?></td>
-    </tr>
-<?php endforeach; ?>
-```
+Avançat
+5) Relaciona professors i cursos (1—N o N—N) i mostra els cursos d’un professor.
+6) Afegeix login bàsic i protegeix rutes d’edició.
 
 ---
 
-## 📖 Exemple 2: Crear un Nou Estudiant
+## 📚 Recursos
 
-### Pas a Pas amb Codi Real:
-
-### **Pas 1: L'usuari clica "Afegir Estudiant"**
-```html
-<!-- Enllaç a la Vista -->
-<a href="index.php?action=create">➕ Afegir Estudiant</a>
-```
-
-### **Pas 2: El Front Controller rep la petició**
-```php
-// index.php
-$action = $_GET['action'] ?? 'index';  // action = 'create'
-
-switch ($action) {
-    case 'create':
-        $controller->create();  // Mostra el formulari
-        break;
-}
-```
-
-### **Pas 3: El Controller mostra el formulari**
-```php
-// controllers/StudentController.php
-public function create() {
-    // Simplement carrega la vista del formulari
-    require_once __DIR__ . '/../views/students/create.php';
-}
-```
-
-### **Pas 4: L'usuari omple i envia el formulari**
-```html
-<!-- views/students/create.php -->
-<form action="index.php?action=store" method="POST">
-    <input type="text" name="name" required>
-    <input type="email" name="email" required>
-    <input type="number" name="age" required>
-    <select name="course" required>
-        <option value="DAW">DAW</option>
-        <option value="DAM">DAM</option>
-    </select>
-    <button type="submit">💾 Crear Estudiant</button>
-</form>
-```
-
-### **Pas 5: El Controller processa les dades**
-```php
-// controllers/StudentController.php
-public function store() {
-    // 1. Valida les dades
-    $errors = $this->validateStudent($_POST);
-    
-    if (empty($errors)) {
-        // 2. Crida al Model per guardar
-        $result = $this->studentModel->create($_POST);
-        
-        if ($result) {
-            $_SESSION['success'] = "Estudiant creat correctament!";
-            header('Location: index.php');  // Redirigeix al llistat
-            exit;
-        }
-    }
-}
-```
-
-### **Pas 6: El Model guarda a la Base de Dades**
-```php
-// models/Student.php
-public function create($data) {
-    // SQL preparada per evitar injeccions
-    $query = "INSERT INTO students (name, email, age, course) 
-              VALUES (:name, :email, :age, :course)";
-    
-    $stmt = $this->db->prepare($query);
-    
-    // Neteja i vincula les dades
-    $stmt->bindParam(':name', $data['name']);
-    $stmt->bindParam(':email', $data['email']);
-    $stmt->bindParam(':age', $data['age']);
-    $stmt->bindParam(':course', $data['course']);
-    
-    return $stmt->execute();  // Retorna true si tot va bé
-}
-```
+- Wikipedia (MVC): https://ca.wikipedia.org/wiki/Model%E2%80%93vista%E2%80%93controlador
+- PHP: The Right Way: https://phptherightway.com/
+- PDO Prepared Statements: https://www.php.net/manual/es/pdo.prepared-statements.php
+- Sessions en PHP: https://www.php.net/manual/es/book.session.php
 
 ---
 
-## 📖 Exemple 3: CRUD de Professors - Extensió del Patró
+## 👨‍🏫 Crèdits
 
-Aquest projecte també inclou un **CRUD complet de professors** que segueix exactament el mateix patró MVC que els estudiants. Això demostra la **reutilització i escalabilitat** del patró.
-
-### 🔄 Comparativa: Estudiants vs Professors
-
-| Component | Estudiants | Professors |
-|-----------|-----------|------------|
-| **Model** | `Student.php` | `Teacher.php` |
-| **Controller** | `StudentController.php` | `TeacherController.php` |
-| **Vistes** | `views/students/` | `views/teachers/` |
-| **Front Controller** | `index.php` | `teachers.php` |
-| **Taula BD** | `students` | `teachers` |
-
-### 📊 Camps del Model Teacher
-
-```php
-// models/Teacher.php
-class Teacher {
-    public $id;
-    public $name;          // Nom del professor
-    public $email;         // Email (únic)
-    public $phone;         // Telèfon (9 dígits)
-    public $department;    // Departament (Informàtica, Matemàtiques, etc.)
-    public $specialty;     // Especialitat (Desenvolupament Web, etc.)
-    public $created_at;    // Data de creació
-}
-```
-
-### 🎓 Lliçó Important: **Patró com a Plantilla Reutilitzable**
-
-Quan tens un patró ben definit:
-1. **Crear un nou CRUD és ràpid**: Només cal copiar l'estructura i adaptar els camps
-2. **Menys errors**: Segueixes sempre la mateixa lògica
-3. **Fàcil de mantenir**: Tots els CRUDs funcionen igual
-4. **Escalable**: Pots afegir tants models com necessitis (cursos, assignatures, notes, etc.)
-
-### 💡 Exemple: Si vols afegir un CRUD de "Cursos"
-
-1. Crea `models/Course.php` (copiant `Student.php` i adaptant camps)
-2. Crea `controllers/CourseController.php` (copiant `StudentController.php`)
-3. Crea `views/courses/` amb `index.php`, `create.php`, `edit.php`
-4. Crea `courses.php` com a Front Controller
-5. Afegeix la taula `courses` a `init.sql`
-6. Afegeix l'enllaç al menú de navegació en `header.php`
-
-**I ja tens un CRUD complet de cursos!** 🚀
-
----
-
-## 🎯 Avantatges del Patró MVC
-
-### ✅ **Separació de Responsabilitats**
-Cada component té una funció clara:
-- **Model**: Només gestiona dades
-- **Vista**: Només mostra informació
-- **Controller**: Només coordina
-
-### ✅ **Reutilització de Codi**
-- Els layouts (`header.php`, `footer.php`) es reutilitzen en totes les vistes
-- El mateix Model pot ser usat per diferents Controladors
-
-### ✅ **Manteniment Fàcil**
-- Vols canviar el disseny? → Modifica només les **Vistes**
-- Vols canviar la Base de Dades? → Modifica només el **Model**
-- Vols afegir validacions? → Modifica només el **Controller**
-
-### ✅ **Treball en Equip**
-- Un desenvolupador pot treballar en les Vistes (frontend)
-- Un altre en els Models (backend)
-- Un altre en els Controladors (lògica de negoci)
-
----
-
-## 🧩 Components Addicionals
-
-### 📦 **Database.php** - Patró Singleton
-```php
-// config/Database.php
-class Database {
-    private static $instance = null;
-    
-    public static function getInstance() {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-}
-```
-**Per què?** Garanteix que només hi hagi UNA connexió a la base de dades durant tota l'execució de l'aplicació.
-
-### 🎨 **Layouts** - Reutilització de Codi HTML
-```php
-// Totes les vistes inclouen el mateix header i footer
-<?php require_once __DIR__ . '/../layouts/header.php'; ?>
-    <!-- Contingut específic de cada vista -->
-<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
-```
-
-### 📬 **Missatges Flash** amb Sessions
-```php
-// Controller: Guarda missatge
-$_SESSION['success'] = "Estudiant creat correctament!";
-
-// View: Mostra i elimina
-<?php if (isset($_SESSION['success'])): ?>
-    <div class="alert"><?= $_SESSION['success'] ?></div>
-    <?php unset($_SESSION['success']); ?>
-<?php endif; ?>
-```
-
----
-
-## 🚀 Com Executar el Projecte
-
-### 1️⃣ **Inicialitzar la Base de Dades**
-```bash
-php database/init.php
-```
-Això crea el fitxer `database/students.db` amb:
-- Taula d'**estudiants** amb 4 registres d'exemple
-- Taula de **professors** amb 4 registres d'exemple
-
-### 2️⃣ **Iniciar el Servidor PHP**
-```bash
-php -S localhost:8000
-```
-
-### 3️⃣ **Accedir a l'Aplicació**
-- **Gestió d'Estudiants**: `http://localhost:8000`
-- **Gestió de Professors**: `http://localhost:8000/teachers.php`
-
----
-
-## 📊 Funcionalitats Implementades
-
-### ✅ **CRUD d'Estudiants**
-- ✏️ Crear nous estudiants
-- 📋 Llistar tots els estudiants
-- ✏️ Editar estudiants existents
-- 🗑️ Eliminar estudiants
-- ✅ Validació de formularis (nom, email, edat, curs)
-- 📧 Comprovació d'emails duplicats
-
-### ✅ **CRUD de Professors**
-- ✏️ Crear nous professors
-- 📋 Llistar tots els professors
-- ✏️ Editar professors existents
-- 🗑️ Eliminar professors
-- ✅ Validació de formularis (nom, email, telèfon, departament, especialitat)
-- 📧 Comprovació d'emails duplicats
-- 📱 Validació de format de telèfon (9 dígits)
-
----
-
-## 🔍 Exercicis per Practicar
-
-### 📝 **Nivell Bàsic**
-1. Afegeix un nou camp "població" a la taula d'estudiants
-2. Crea una vista per mostrar només estudiants de DAW
-3. Afegeix validació per comprovar que l'edat sigui major de 16
-4. Afegeix un camp "anys d'experiència" a la taula de professors
-
-### 📝 **Nivell Intermedi**
-5. Crea un nou Model `Course` per gestionar els cursos
-6. Afegeix paginació al llistat d'estudiants i professors (10 per pàgina)
-7. Implementa una cerca per nom o email en ambdues taules
-8. Crea una relació entre professors i cursos (un professor pot impartir diversos cursos)
-
-### 📝 **Nivell Avançat**
-9. Afegeix autenticació d'usuaris (login/logout)
-10. Crea una API REST que retorni JSON en lloc de HTML
-11. Implementa el patró Repository per abstraure l'accés a dades
-12. Afegeix la possibilitat d'assignar estudiants a professors (relació many-to-many)
-
----
-
-## 📚 Recursos Addicionals
-
-- [Patró MVC - Wikipedia](https://ca.wikipedia.org/wiki/Model%E2%80%93vista%E2%80%93controlador)
-- [PHP: The Right Way](https://phptherightway.com/)
-- [PDO i Prepared Statements](https://www.php.net/manual/es/pdo.prepared-statements.php)
-- [Sessions en PHP](https://www.php.net/manual/es/book.session.php)
-
----
-
-## 👨‍💻 Autor
-
-**INS Montsià - CFGS DAW**  
-Curs 2025-26
+INS Montsià — CFGS DAW (Curs 2025–26)
 
 ---
 
 ## 📄 Llicència
 
-Aquest és un projecte educatiu de lliure ús per a l'aprenentatge del patró MVC.
+Projecte educatiu lliure per aprendre MVC amb PHP.
