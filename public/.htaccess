@@ -1,0 +1,5 @@
+# No permetre l'accés directe als fitxers PHP del directori public
+<Files "*.php">
+    Order Deny,Allow
+    Deny from all
+</Files>

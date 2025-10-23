@@ -1,0 +1,4 @@
+# Ignorar el fitxer de base de dades
+*.db
+*.sqlite
+*.sqlite3
