@@ -108,6 +108,29 @@ $router->get('/teaching-teams/remove', 'TeachingTeamController@remove');
 // Veure cursos d'un professor concret
 $router->get('/teaching-teams/by-teacher', 'TeachingTeamController@byTeacher');
 
+// ============================================
+// RUTES DE AULES
+// ============================================
+
+// Llistat de tots els aules
+$router->get('/classrooms', 'ClassroomController@index');
+
+// Formulari per crear un nou aula
+$router->get('/classrooms/create', 'ClassroomController@create');
+
+// Processa la creació d'un aula (POST)
+$router->post('/classrooms/store', 'ClassroomController@store');
+
+// Formulari per editar un aula
+$router->get('/classrooms/edit/:id', 'ClassroomController@edit');
+
+// Processa l'actualització d'un aula (POST)
+$router->post('/classrooms/update', 'ClassroomController@update');
+
+// Elimina un aula
+$router->get('/classrooms/delete/:id', 'ClassroomController@delete');
+
+
 
 // ============================================
 // NOTES PER ALS ESTUDIANTS

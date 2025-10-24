@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS teaching_teams;
 DROP TABLE IF EXISTS students;
 DROP TABLE IF EXISTS teachers;
 DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS classrooms;
 
 -- Taula de cursos (1:N amb students)
 CREATE TABLE courses (
@@ -38,6 +39,14 @@ CREATE TABLE teachers (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Taula d'aules
+CREATE TABLE classrooms (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+
 -- Dades d'exemple de cursos
 INSERT INTO courses (code, name, description) VALUES 
     ('DAW', 'Desenvolupament d''Aplicacions Web', 'CFGS de programació web amb PHP, JavaScript i frameworks moderns'),
@@ -59,6 +68,12 @@ INSERT INTO teachers (name, email, phone, department, specialty) VALUES
     ('Marta Riba Costa', 'marta.riba@iesmontsia.cat', '977501236', 'Informàtica', 'Programació'),
     ('Carles Pons Serra', 'carles.pons@iesmontsia.cat', '977501237', 'FOL', 'Formació i Orientació Laboral');
 
+INSERT INTO classrooms (name) VALUES 
+    ('A21'),
+    ('A22'),
+    ('A23'),
+    ('A24');
+    
 -- ============================================
 -- TAULA INTERMÈDIA per RELACIÓ N:M
 -- ============================================
