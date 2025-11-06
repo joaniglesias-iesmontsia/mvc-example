@@ -129,24 +129,7 @@ class Router {
      */
     private function notFound() {
         http_response_code(404);
-        echo "<!DOCTYPE html>
-        <html lang='ca'>
-        <head>
-            <meta charset='UTF-8'>
-            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-            <title>404 - Pàgina no trobada</title>
-            <link rel='stylesheet' href='/public/css/style.css'>
-        </head>
-        <body>
-            <div class='container' style='text-align: center; padding: 4rem 0;'>
-                <h1 style='font-size: 6rem; color: #e74c3c;'>404</h1>
-                <h2>Pàgina no trobada</h2>
-                <p>La pàgina que cerques no existeix.</p>
-                <a href='/' class='btn btn-primary'>Tornar a l'inici</a>
-            </div>
-        </body>
-        </html>";
-        exit;
+        die("Pàgina inexistent (404).");
     }
     
     /**
